@@ -39,16 +39,19 @@ const Homepage = () => {
   const getStudentName = async () => {
     try {
       const token = localStorage.getItem("token"); // Get the token from localStorage (or wherever you store it)
-      const response = await fetch("http://localhost:5001/fetch_user_by_id", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+      const response = await fetch(
+        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/fetch_user_by_id",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+          },
+          body: JSON.stringify({
+            user_id: "someUserId", // Pass the user ID or other necessary parameters
+          }),
         },
-        body: JSON.stringify({
-          user_id: "someUserId", // Pass the user ID or other necessary parameters
-        }),
-      });
+      );
       
       const data = await response.json();
       if (response.ok) {
@@ -67,12 +70,15 @@ const Homepage = () => {
     try {
       const token = localStorage.getItem("token");
   
-      const response = await fetch("http://localhost:5001/get_course_summary", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/get_course_summary",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
   
       const data = await response.json();
   
@@ -105,14 +111,17 @@ const Homepage = () => {
     try {
       const token = localStorage.getItem("token");
   
-      const response = await fetch("http://localhost:5001/drop_class", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/drop_class",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ course_id: courseId }),
         },
-        body: JSON.stringify({ course_id: courseId }),
-      });
+      );
   
       const result = await response.json();
   

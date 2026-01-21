@@ -10,11 +10,12 @@ from flask_cors import CORS
 template_dir = os.path.abspath("frontend")
 
 app = Flask(__name__, template_folder=template_dir)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://benbraniff.github.io"}})
+# port = int(os.environ.get("PORT", 5432))
 
 @app.route('/')
 def home():
-    return jsonify({"message": "Backend is running!"})
+    return jsonify({"message": "Coursely Backend is live!"})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -48,4 +49,5 @@ def get_user():
 """
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get("PORT", 5432))
+    app.run(host='0.0.0.0', port=port)

@@ -24,13 +24,16 @@ const LoginForm = () => {
 
     try {
       // Send login request to flask api
-      const response = await fetch('http://localhost:5001/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
         },
-        body: JSON.stringify({ email, password }),
-      });
+      );
 
       const data = await response.json();
 

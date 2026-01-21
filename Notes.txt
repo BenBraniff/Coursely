@@ -17,3 +17,23 @@ Look for a .env file: If you have one, update the DATABASE_URL there.
 (3)
 run moodle_db which will install database into railway
 python3 moodle_db.py
+
+
+
+
+Configure Railway Environment Variables
+Even though you have a .env file locally, you should not push your .env to GitHub (for security). Instead, you must tell Railway what those values are:
+
+Go to your Railway Dashboard.
+
+Select your Flask Service.
+
+Click the Variables tab.
+
+Add these variables manually:
+
+DATABASE_URL: (Your postgres connection string)
+
+SECRET_KEY: (A random string for your JWT tokens)
+
+PYTHONUNBUFFERED: 1 (Helps with logging)
