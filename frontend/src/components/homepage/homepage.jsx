@@ -9,6 +9,9 @@ import "boxicons";
 import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
+  // Instead of fetch('http://localhost:5000/api')
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   // users data from fetch calls
   const [studentName, setStudentName] = useState("Student"); // Default name, will be updated
 
@@ -34,25 +37,21 @@ const Homepage = () => {
   const startX = useRef(null);
   const startWidth = useRef(null);
 
-
   // Function to fetch student name from the backend
   const getStudentName = async () => {
     try {
       const token = localStorage.getItem("token"); // Get the token from localStorage (or wherever you store it)
-      const response = await fetch(
-        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/fetch_user_by_id",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-          },
-          body: JSON.stringify({
-            user_id: "someUserId", // Pass the user ID or other necessary parameters
-          }),
+      const response = await fetch(`${apiUrl}/fetch_user_by_id`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Send the token in the Authorization header
         },
-      );
-      
+        body: JSON.stringify({
+          user_id: "someUserId", // Pass the user ID or other necessary parameters
+        }),
+      });
+
       const data = await response.json();
       if (response.ok) {
         console.log("User fetched successfully:", data);
@@ -69,19 +68,16 @@ const Homepage = () => {
   const fetchRegisteredCourses = async () => {
     try {
       const token = localStorage.getItem("token");
-  
-      const response = await fetch(
-        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/get_course_summary",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+
+      const response = await fetch(`${apiUrl}/get_course_summary`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
-  
+      });
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setRegisteredCourses(data);
         console.log("Fetched courses:", data);
@@ -94,37 +90,32 @@ const Homepage = () => {
   };
 
   const filteredCourses = registeredCourses.filter(
-    (course) => course.semester_offered === selectedTerm
+    (course) => course.semester_offered === selectedTerm,
   );
-  
-  
+
   useEffect(() => {
     getStudentName(); // Fetch the student name when the component mounts
   }, []);
-  
+
   useEffect(() => {
     fetchRegisteredCourses(); // Refetch courses when term changes
   }, [selectedTerm]);
-  
 
   const dropCourse = async (courseId) => {
     try {
       const token = localStorage.getItem("token");
-  
-      const response = await fetch(
-        "postgresql://postgres:OyzUszZSSpTekIlRAMBZDtRjwJAfhUpJ@centerbeam.proxy.rlwy.net:25636/railway/drop_class",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ course_id: courseId }),
+
+      const response = await fetch(`${apiUrl}/drop_class`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
-  
+        body: JSON.stringify({ course_id: courseId }),
+      });
+
       const result = await response.json();
-  
+
       if (response.ok) {
         alert("Course dropped successfully!");
         fetchRegisteredCourses(); // Refresh list after dropping
@@ -136,7 +127,7 @@ const Homepage = () => {
       alert("Something went wrong while dropping the course.");
     }
   };
-  
+
   // for resizer
   const handleMouseDown = (event) => {
     event.preventDefault();
@@ -159,7 +150,7 @@ const Homepage = () => {
     startX.current = null;
     startWidth.current = null;
   };
-  
+
   // Function to toggle the full-screen mode for calendar
   const toggleCalendarFullScreen = () => {
     setIsCalendarFullScreen(!isCalendarFullScreen);
@@ -227,7 +218,7 @@ const Homepage = () => {
               <p>Find Course</p>
               <i class="bx bx-search-alt-2 search"></i>
             </button>
-            
+
             {/* term summary */}
             <div className="term-summary">
               <h2>Term Summary</h2>
@@ -236,18 +227,21 @@ const Homepage = () => {
                   <ul className="summary-course-list">
                     {filteredCourses.map((course, index) => (
                       <li key={index}>
-                        <strong>{course.course_code}</strong> – {course.course_name}<br />
+                        <strong>{course.course_code}</strong> –{" "}
+                        {course.course_name}
+                        <br />
                         <small>
-                          {formatTime(course.start_time)} to {formatTime(course.end_time)} - {" "}
-                          {course.building} {course.room_num}
+                          {formatTime(course.start_time)} to{" "}
+                          {formatTime(course.end_time)} - {course.building}{" "}
+                          {course.room_num}
                         </small>
                         <br />
-                          <button
-                            className="drop-button"
-                            onClick={() => dropCourse(course.course_id)}
-                          >
+                        <button
+                          className="drop-button"
+                          onClick={() => dropCourse(course.course_id)}
+                        >
                           Drop
-                          </button>
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -257,13 +251,13 @@ const Homepage = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Resizer */}
           <div className="resizer" onMouseDown={handleMouseDown}>
             <i class="bx bx-chevrons-left"></i>
             <i class="bx bx-chevrons-right"></i>
           </div>
-          
+
           {/* calendar */}
           <div
             className={`calendar ${isCalendarFullScreen ? "full-screen" : ""}`}
@@ -287,7 +281,7 @@ const Homepage = () => {
             </div>
           </div>
         )}
-        
+
         {/* popup overlay */}
         {isPopupFullScreen && (
           // <FindCoursePopup />

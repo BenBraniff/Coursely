@@ -7,10 +7,8 @@ from methods.user import *
 from methods.courses import *
 from flask_cors import CORS
 
-template_dir = os.path.abspath("frontend")
-
-app = Flask(__name__, template_folder=template_dir)
-CORS(app, resources={r"/*": {"origins": "https://benbraniff.github.io"}})
+app = Flask(__name__)
+CORS(app, origins=["https://benbraniff.github.io/Coursely"])
 # port = int(os.environ.get("PORT", 5432))
 
 @app.route('/')
@@ -49,5 +47,5 @@ def get_user():
 """
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5432))
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
