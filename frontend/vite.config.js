@@ -7,5 +7,5 @@ export default defineConfig({
     open: "login", // Open the login page by default
   },
   plugins: [react()],
-  // base: "/Coursly/", // This is to change the URL in the browser
+  base: "/Coursely/", // This is to change the URL in the browser
 });

@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/token_identifier.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Router>
+    <Router basename="/Coursely">
       <Routes>
         <Route
           path="/home"
@@ -22,5 +22,5 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<LoginForm />} />
       </Routes>
     </Router>
-  </StrictMode>
+  </StrictMode>,
 );
